@@ -42,6 +42,20 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
+      redis-master:
+        image: redis
+        ports:
+          - 6379:6379
+        env:
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
+        options: >-
+          --name=redis-master
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
