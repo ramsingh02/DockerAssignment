@@ -2,11 +2,6 @@ package com.docker.github.actions.payload;
 
 import java.time.LocalDateTime;
 
-/*@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor*/
 public class ErrorDetails {
 
     private LocalDateTime timestamp;
