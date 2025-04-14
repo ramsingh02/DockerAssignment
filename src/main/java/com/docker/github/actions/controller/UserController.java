@@ -4,6 +4,9 @@ import com.docker.github.actions.model.User;
 import com.docker.github.actions.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,18 +33,21 @@ public class UserController {
     }
 
     @GetMapping
+    @Cacheable("users")
     public List<User> getAllUsers(){
         LOGGER.info("User fetching from database :::::: getAllUsers");
         return userService.getAllUsers();
     }
 
     @GetMapping("{userId}")
+    @Cacheable(value = "users", key = "#userId")
     public User getUserById(@PathVariable("userId") Long userId){
         LOGGER.info("User fetching from database :::::: getUserById : "+userId);
         return userService.getUserById(userId);
     }
 
     @PutMapping("{userId}")
+    @CachePut(value = "users", key = "#userId")
     public User updateUser(
             @PathVariable("userId") Long userId,
             @RequestBody User user
@@ -51,6 +57,7 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}")
+    @CacheEvict(value = "users", key = "#userId")
     public String deleteUser(@PathVariable("userId") Long userId){
         userService.deleteUser(userId);
         return "User successfully deleted :::: "+userId;
